@@ -8,11 +8,11 @@ export abstract class Obstacle {
     // Returns negative if inside the obstacle, positive if outside
     // positions: [sample_size][state_dimension]
     // constraint_vals: [sample_size]
-    abstract constraint_func(positions: number[][]): number[]
+    abstract constraintFunc(positions: number[][]): number[]
 }
 
-const OBSTACLE_COLOR = "rgb(138,43,226)"
-const OBSTACLE_ALPHA_COLOR = "rgba(138,43,226,100)"
+const OBSTACLE_COLOR = "black"
+const OBSTACLE_ALPHA_COLOR = "rgba(0,0,0,0.2)"
 
 
 export class CircleObstacle extends Obstacle {
@@ -34,10 +34,11 @@ export class CircleObstacle extends Obstacle {
 
         p.noFill(); // No fill for the outer circle
         p.stroke(OBSTACLE_COLOR); // Outline color
+        p.strokeWeight(3.0)
         p.circle(this.centerPosition[0], this.centerPosition[1], this.radius * 2)
     }
 
-    constraint_func(positions: number[][]): number[] {
+    constraintFunc(positions: number[][]): number[] {
         const constraintVals: number[] = []
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i]!
@@ -78,10 +79,11 @@ export class RectangleObstacle extends Obstacle {
 
         p.noFill()
         p.stroke(OBSTACLE_COLOR)
+        p.strokeWeight(3.0)
         p.rect(this.bottomLeftPosition[0], this.bottomLeftPosition[1], this.width, this.height)
     }
 
-    constraint_func(positions: number[][]): number[] {
+    constraintFunc(positions: number[][]): number[] {
         const constraintVals: number[] = []
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i]!
