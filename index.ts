@@ -30,6 +30,8 @@ const sketch = (p: p5) => {
     })
     changeInstanceButton.position(10, 10)
     updateInstance()
+
+    p.createA("https://github.com/Mya-Mya/CBFGame", "GitHub").position(10,40)
   }
 
   p.windowResized = () => {
