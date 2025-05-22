@@ -45,5 +45,9 @@ const sketch = (p: p5) => {
     p.fill("black")
     p.circle(p.mouseX, p.mouseY, 10)
   }
+
+  p.keyReleased = () => {
+    if (p.isLooping()) { p.noLoop() } else { p.loop() }
+  }
 }
 new p5(sketch);
