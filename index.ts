@@ -48,6 +48,7 @@ const sketch = (p: p5) => {
     p.circle(p.mouseX, p.mouseY, 10)
   }
 
+  // キーを押すと時間を止めることができる．
   p.keyReleased = () => {
     if (p.isLooping()) { p.noLoop() } else { p.loop() }
   }

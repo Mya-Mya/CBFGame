@@ -1,6 +1,10 @@
 import { Obstacle, CircleObstacle, RectangleObstacle } from "./obstacles"
 import { Agent } from "./agent"
 
+/**
+ * 障害物とエージェントのまとまり．
+ * 自分で新しくインスタンスを作りたければ，ここに追加する．
+ */
 export default [
     {
         "obstacles": [

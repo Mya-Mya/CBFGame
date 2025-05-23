@@ -2,12 +2,23 @@ import p5 from "p5"
 type Vector = [number, number]
 
 export abstract class Obstacle {
+    /**
+     * 障害物を表す抽象クラス．
+     */
+
+    /**
+     * 障害物を描画する．
+     * @param p 
+     */
     abstract draw(p: p5): void
 
-    // Abstract method for the constraint function
-    // Returns negative if inside the obstacle, positive if outside
-    // positions: [sample_size][state_dimension]
-    // constraint_vals: [sample_size]
+    /**
+     * 障害物に対する制約関数を返す．
+     * positionsはN x 2のサイズの行列，戻り値はNサイズのベクトル（Nはサンプルサイズ）．
+     * positions[n]はサンプルnにおける(x,y)を表す．
+     * この関数は連続であることが好ましい．
+     * @param positions {number[][]}
+     */
     abstract constraintFunc(positions: number[][]): number[]
 }
 

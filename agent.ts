@@ -3,6 +3,11 @@ import { Obstacle } from "./obstacles";
 import { FRAME_RATE } from "./config";
 
 export class Agent {
+    /**
+     * CBF制約による介入制御付きエージェント．
+     * 基本的には，自己位置からマウスに向かう速度ベクトルで移動しようとしているのだが，
+     * 障害物回避に関するCBF制約によって介入が行われ，その速度ベクトルの長さが変更される．
+     */
     private alpha: number
     private oneMinusAlpha: number
     private color: string
@@ -15,18 +20,13 @@ export class Agent {
         this.x = x
         this.y = y
     }
-    getUnsatisfiedObstacles(dx: number, dy: number, obstacles: Obstacle[]) {
-        const x_and_nextx = [
-            [this.x, this.y],
-            [this.x + dx, this.y + dy]
-        ]
-        return obstacles.filter(obstacle => {
-            const h_and_nexth = obstacle.constraintFunc(x_and_nextx)
-            const h = h_and_nexth[0]!
-            const nexth = h_and_nexth[1]!
-            return !(nexth >= this.oneMinusAlpha * h && nexth >= 0)
-        })
-    }
+    /**
+     * 自己位置が(x, y)から(x+dx, y+dy)に移動することになっても，全てのCBF制約を満たしているかを調べる．
+     * @param dx 自己位置からX方向にずれる量
+     * @param dy 自己位置からY方向にずれる量
+     * @param obstacles 回避対象にある障害物
+     * @returns 
+     */
     doesSatisfyAllConstraints(dx: number, dy: number, obstacles: Obstacle[]) {
         const x_and_nextx = [
             [this.x, this.y],
@@ -40,7 +40,13 @@ export class Agent {
         }
         return true
     }
+    /**
+     * 
+     * @param p p5jsインスタンス
+     * @param obstacles 回避対象にある障害物
+     */
     tick(p: p5, obstacles: Obstacle[]) {
+        // もし障害物や制約が無いのなら，次の自己位置は(x+nominal_dx, y+nominal_dy)になる．
         const nominal_dx = (p.mouseX - this.x) / FRAME_RATE
         const nominal_dy = (p.mouseY - this.y) / FRAME_RATE
 
@@ -51,6 +57,7 @@ export class Agent {
             // ノミナル入力では違反してしまう障害物がある
             for (deltaRatio = 0.01; deltaRatio <= 1.0; deltaRatio += 0.01) {
                 deltaRatioSign = -1
+                // deltaRatioはなるべく小さく留めたい
                 if (this.doesSatisfyAllConstraints(
                     nominal_dx * (1 - deltaRatio),
                     nominal_dy * (1 - deltaRatio),
@@ -59,14 +66,14 @@ export class Agent {
             }
             intervened = true
         }
-
+        // 自己位置を移動
         const optimalRatio = 1 + deltaRatio * deltaRatioSign
         const optimal_dx = nominal_dx * optimalRatio
         const optimal_dy = nominal_dy * optimalRatio
         this.x += optimal_dx
         this.y += optimal_dy
 
-
+        // 描画
         p.noFill()
         p.stroke(this.color)
         p.strokeWeight(2.0)
