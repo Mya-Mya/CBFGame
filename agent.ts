@@ -56,7 +56,6 @@ export class Agent {
                     nominal_dy * (1 - deltaRatio),
                     obstacles
                 )) break
-                deltaRatio += 0.1
             }
             intervened = true
         }
